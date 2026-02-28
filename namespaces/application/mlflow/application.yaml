@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlflow
+  namespace: infra-tools
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: mlflow
+    targetRevision: "5.2.1"
+    helm:
+      values: |
+        service:
+          type: ClusterIP
+
+        # для t3.micro — дуже важливо
+        resourcesPreset: "nano"
+
+        postgresql:
+          enabled: true
+          primary:
+            persistence:
+              enabled: false
+
+        minio:
+          enabled: true
+          persistence:
+            enabled: false
+          service:
+            type: ClusterIP
+
+        run:
+          persistence:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: application
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
