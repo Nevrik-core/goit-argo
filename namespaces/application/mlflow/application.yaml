@@ -6,33 +6,32 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: https://community-charts.github.io/helm-charts
     chart: mlflow
-    targetRevision: "5.2.1"
+    targetRevision: "1.8.1"
     helm:
       values: |
         service:
           type: ClusterIP
 
-        # для t3.micro — дуже важливо
-        resourcesPreset: "nano"
-
-        postgresql:
-          enabled: true
-          primary:
-            persistence:
-              enabled: false
-
-        minio:
-          enabled: true
-          persistence:
+        backendStore:
+          postgres:
             enabled: false
-          service:
-            type: ClusterIP
-
-        run:
-          persistence:
+          mysql:
             enabled: false
+          mssql:
+            enabled: false
+          # залишимо sqlite (дефолт)
+          defaultSqlitePath: ":memory:"
+
+        artifactRoot:
+          s3:
+            enabled: false
+          gcs:
+            enabled: false
+          azureBlob:
+            enabled: false
+          defaultArtifactRoot: "./mlruns"
   destination:
     server: https://kubernetes.default.svc
     namespace: application
