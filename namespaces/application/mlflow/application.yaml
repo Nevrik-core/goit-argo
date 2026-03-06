@@ -6,32 +6,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://community-charts.github.io/helm-charts
-    chart: mlflow
-    targetRevision: "1.8.1"
-    helm:
-      values: |
-        service:
-          type: ClusterIP
-
-        backendStore:
-          postgres:
-            enabled: false
-          mysql:
-            enabled: false
-          mssql:
-            enabled: false
-          # залишимо sqlite (дефолт)
-          defaultSqlitePath: ":memory:"
-
-        artifactRoot:
-          s3:
-            enabled: false
-          gcs:
-            enabled: false
-          azureBlob:
-            enabled: false
-          defaultArtifactRoot: "./mlruns"
+    repoURL: https://github.com/Nevrik-core/mlops-experiments.git
+    targetRevision: lesson-8-9
+    path: argocd/manifests/mlflow
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: application
